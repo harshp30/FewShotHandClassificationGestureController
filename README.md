@@ -11,7 +11,7 @@
 **Use Case:** *Provides assistance to individuals with fine-motor control challenges or other disabilities, helping them navigate their devices more easily*
 
 ---
-### Metrics:
+### Performance:
 
 Model performance based on evaluation script:
 
