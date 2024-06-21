@@ -11,6 +11,11 @@
 **Use Case:** *Provides assistance to individuals with fine-motor control challenges or other disabilities, helping them navigate their devices more easily*
 
 ---
+### Metrics:
+
+Model performance based on evaluation script:
+
+```Model Accuracy: 90%```
 
 ### Demo:
 
