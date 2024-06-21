@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from PIL import Image
-from model import HybridCNNTransformer
+from model import HybridResNetTransformer
 
 # Custom Dataset
 class CustomDataset(Dataset):
@@ -80,7 +80,7 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 num_classes = len(set(test_dataset.labels))
 
 # Initialize the model
-model = HybridCNNTransformer(num_classes=num_classes).to(device)
+model = HybridResNetTransformer(num_classes=num_classes).to(device)
 # Load the trained model parameters
 model.load_state_dict(torch.load(model_save_path))
 model.eval()

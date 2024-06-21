@@ -15,7 +15,7 @@
 
 Model performance based on evaluation script:
 
-```Model Accuracy: 90%```
+```Model Accuracy: 95.00%```
 
 ### Demo:
 
