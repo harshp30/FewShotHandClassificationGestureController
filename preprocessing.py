@@ -1,9 +1,3 @@
-'''
-Extract and cleanup data and split into train, val, test 
-Also assure only 20 images per class in training split for low-shot training
-'''
-
-# Import libraries
 import os
 import shutil
 import pandas as pd
