@@ -3,7 +3,7 @@ import cv2
 import torch
 import torch.nn as nn
 from torchvision import transforms
-from model import HybridCNNTransformer
+from model import HybridResNetTransformer
 from PIL import Image
 import time
 
@@ -27,12 +27,25 @@ transform = transforms.Compose([
 
 # Initialize the model
 num_classes = len(class_mapping)  # Ensure this matches your trained model
-model = HybridCNNTransformer(num_classes=num_classes).to(device)
+model = HybridResNetTransformer(num_classes=num_classes).to(device)
+# Load the model's state dictionary
 model.load_state_dict(torch.load(model_save_path, map_location=device))
 model.eval()
 
 # Function to perform inference on a single image
 def predict_image(image_path, model, transform, device):
+    """
+    Predict the class of an image using the trained model.
+    
+    Parameters:
+    image_path (str): Path to the image file.
+    model (nn.Module): The trained model.
+    transform (callable): Transformations to apply to the image.
+    device (torch.device): Device to perform the inference on.
+    
+    Returns:
+    tuple: Predicted class index and probabilities for each class.
+    """
     image = Image.open(image_path).convert("RGB")
     image = transform(image).unsqueeze(0).to(device)
     with torch.no_grad():
@@ -43,10 +56,16 @@ def predict_image(image_path, model, transform, device):
 
 # Function to play music using osascript
 def play_music():
+    """
+    Play music using AppleScript.
+    """
     os.system("osascript -e 'tell application \"Music\" to play'")
 
 # Function to pause music using osascript
 def pause_music():
+    """
+    Pause music using AppleScript.
+    """
     os.system("osascript -e 'tell application \"Music\" to pause'")
 
 # Initialize video capture
@@ -89,7 +108,7 @@ try:
             if prediction_prob > 0.7:
                 if prediction_class == 'palmar right':
                     play_music()
-                elif prediction_class in ['dorsal right']:
+                elif prediction_class == 'dorsal right':
                     pause_music()
             
             start_time = time.time()  # Reset the start time
