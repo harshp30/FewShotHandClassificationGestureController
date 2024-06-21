@@ -62,9 +62,10 @@ batch_size = 2
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Paths
-test_image_dir = '/Users/harsh/Desktop/HandGestureController/training_data/test/images'
-test_labels_path = '/Users/harsh/Desktop/HandGestureController/training_data/test/labels.txt'
-model_save_path = '/Users/harsh/Desktop/HandGestureController/models/model.pth'
+path = ''
+test_image_dir = f'{path}/training_data/test/images'
+test_labels_path = f'{path}/training_data/test/labels.txt'
+model_save_path = f'{path}/models/model.pth'
 
 # Define data transforms
 transform = transforms.Compose([

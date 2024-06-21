@@ -77,11 +77,12 @@ patience = 50
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Paths
-train_image_dir = '/Users/harsh/Desktop/HandGestureController/training_data/train/images'
-train_labels_path = '/Users/harsh/Desktop/HandGestureController/training_data/train/labels.txt'
-val_image_dir = '/Users/harsh/Desktop/HandGestureController/training_data/val/images'
-val_labels_path = '/Users/harsh/Desktop/HandGestureController/training_data/val/labels.txt'
-model_save_dir = '/Users/harsh/Desktop/HandGestureController/models'
+path = ''
+train_image_dir = f'{path}/training_data/train/images'
+train_labels_path = f'{path}/training_data/train/labels.txt'
+val_image_dir = f'{path}/training_data/val/images'
+val_labels_path = f'{path}/training_data/val/labels.txt'
+model_save_dir = '{path}/models'
 
 # Ensure the model save directory exists
 ensure_dir(model_save_dir)

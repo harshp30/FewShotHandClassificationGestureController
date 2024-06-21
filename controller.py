@@ -8,7 +8,8 @@ from PIL import Image
 import time
 
 # Paths
-model_save_path = '/Users/harsh/Desktop/HandGestureController/models/model.pth'
+path = ''
+model_save_path = f'{path}/models/model.pth'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Class mapping
