@@ -1,56 +1,36 @@
-import os
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from PIL import Image
+from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, classification_report
+import numpy as np
 from model import HybridResNetTransformer
 
 # Custom Dataset
 class CustomDataset(Dataset):
     def __init__(self, image_dir, labels_path, transforms=None):
-        """
-        Initialize the custom dataset.
-
-        Parameters:
-        image_dir (str): Directory containing the images.
-        labels_path (str): Path to the labels file.
-        transforms (callable, optional): Optional transform to be applied on a sample.
-        """
         self.image_dir = image_dir
         self.transforms = transforms
         self.images = []
         self.labels = []
         
-        # Read the labels file
         with open(labels_path, 'r') as f:
             for line in f:
                 parts = line.strip().split()
                 if len(parts) >= 2:
                     filename = parts[0]
-                    label = int(parts[1])  # Convert label to integer
+                    label = int(parts[1])
                     self.images.append(filename)
                     self.labels.append(label)
     
     def __len__(self):
-        """
-        Return the total number of samples.
-        """
         return len(self.images)
     
     def __getitem__(self, idx):
-        """
-        Get a sample from the dataset.
-
-        Parameters:
-        idx (int): Index of the sample to retrieve.
-
-        Returns:
-        tuple: (image, label) where image is the transformed image and label is the corresponding label.
-        """
         img_path = os.path.join(self.image_dir, self.images[idx])
         image = Image.open(img_path).convert("RGB")
-        label = torch.tensor(self.labels[idx], dtype=torch.long)  # Convert label to tensor
+        label = torch.tensor(self.labels[idx], dtype=torch.long)
         
         if self.transforms:
             image = self.transforms(image)
@@ -82,37 +62,37 @@ num_classes = len(set(test_dataset.labels))
 
 # Initialize the model
 model = HybridResNetTransformer(num_classes=num_classes).to(device)
-# Load the trained model parameters
 model.load_state_dict(torch.load(model_save_path))
 model.eval()
 
 # Evaluation function
 def evaluate_model(model, test_loader):
-    """
-    Evaluate the model on the test dataset.
-
-    Parameters:
-    model (nn.Module): The trained model to evaluate.
-    test_loader (DataLoader): DataLoader for the test dataset.
-
-    Returns:
-    float: The accuracy of the model on the test dataset.
-    """
-    correct = 0
-    total = 0
+    all_labels = []
+    all_predictions = []
+    
     with torch.no_grad():
         for images, labels in test_loader:
             images = images.to(device)
             labels = labels.to(device)
             outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted.cpu().numpy())
     
-    accuracy = 100 * correct / total
-    return accuracy
+    accuracy = np.mean(np.array(all_labels) == np.array(all_predictions)) * 100
+    precision = precision_score(all_labels, all_predictions, average='weighted')
+    recall = recall_score(all_labels, all_predictions, average='weighted')
+    f1 = f1_score(all_labels, all_predictions, average='weighted')
+    conf_matrix = confusion_matrix(all_labels, all_predictions)
+    
+    return accuracy, precision, recall, f1, conf_matrix
 
 if __name__ == "__main__":
-    # Evaluate the model and print the test accuracy
-    accuracy = evaluate_model(model, test_loader)
+    accuracy, precision, recall, f1, conf_matrix = evaluate_model(model, test_loader)
+    
     print(f'Test Accuracy: {accuracy:.2f}%')
+    print(f'Precision: {precision:.2f}')
+    print(f'Recall: {recall:.2f}')
+    print(f'F1-Score: {f1:.2f}')
+    print("Confusion Matrix:")
+    print(conf_matrix)

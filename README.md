@@ -15,21 +15,36 @@
 
 Model performance based on evaluation script:
 
-```Model Accuracy: 95.00%```
+```Accuracy: 0.95```
+```Precision: 0.95```
+```Recall: 0.94```
+```F1-Score: 0.94```
+```
+Confusion Matrix:
+
+            Predicted
+            -------------
+            |  P  |  N  |
+        ---------------------
+Actual   P  |  10 |  1  |  <-- True Positives (TP) = 10, False Negatives (FN) = 1
+        ---------------------
+         N  |   1 |  11 |  <-- False Positives (FP) = 1, True Negatives (TN) = 11
+
+```
 
 ### Demo:
 
 Below is a video demonstration of the model being used to play/pause music on my MacBook.
 
 <a href="https://www.youtube.com/watch?v=LX3dHq0LZNk">
-    <img src="images/demo.png" alt="Hand Image" width="600" height="400">
+    <img src="assets/demo.png" alt="Hand Image" width="600" height="400">
 </a>
 
 ---
 
 ### Technical Explanation:
 
-#### Preprocessing -- [preprocessing.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/preprocessing.py)
+#### Preprocessing -- [preprocessing.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/src/preprocessing.py)
 
 The preprocessing script takes the full dataset and undersamples it such that for the training split, each class has 20 images. This sets up the data for a 20-shot model training procedure. This script also splits the data into train, validation, and test splits with each image having a corresponding label contained in a one-hot encoded .txt file as shown below.
 
@@ -52,7 +67,7 @@ Image:
 
 ---
 
-#### Training Loop -- [train.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/train.py)
+#### Training Loop -- [train.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/src/train.py)
 
 The training script handles the process of training the `HybridResNetTransformer` model. It includes defining the loss function, initializing the optimizer, loading the data, and running the training and validation loops.
 
@@ -101,7 +116,7 @@ By following this structure, the training script ensures effective training, val
 
 ---
 
-#### Model Architecture -- [model.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/model.py)
+#### Model Architecture -- [model.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/src/model.py)
 
 The model script defines the architecture for the `HybridResNetTransformer` model, which is designed to support a low-shot approach for hand gesture recognition. This hybrid model combines the feature extraction capabilities of ResNet with the long-range dependency modeling of transformers.
 
@@ -156,12 +171,12 @@ By combining the convolutional capabilities of ResNet with the sequence modeling
 Below is a model architecture diagram made using torchviz.
 
 <a>
-    <img src="images/model_architecture.png" alt="Model Architecture" width="200" height="800">
+    <img src="assets/model_architecture.png" alt="Model Architecture" width="600" height="2000">
 </a>
 
 ---
 
-#### Evaluation -- [eval.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/eval.py)
+#### Evaluation -- [eval.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/src/eval.py)
 
 The evaluation script handles the process of evaluating the `HybridCNNTransformer` model on the test dataset. It includes loading the data, defining the data transforms, initializing the model, and computing the test accuracy.
 
@@ -211,7 +226,7 @@ By following this structure, the evaluation script ensures that the model's perf
 
 ---
 
-#### Controller -- [controller.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/controller.py)
+#### Controller -- [controller.py](https://github.com/harshp30/FewShotHandClassificationGestureController/blob/main/src/controller.py)
 
 The inference script captures live video from a webcam, performs hand gesture classification using the `HybridResNetTransformer` model, and controls music playback on a macOS system based on the predicted gesture.
 
